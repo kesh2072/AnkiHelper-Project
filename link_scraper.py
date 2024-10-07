@@ -7,7 +7,8 @@ def get_HTML_document(url):
     return response.text
 
 def get_url(culture_list):
-    with open("guardian_links.txt", "a", encoding="utf-8") as guardian:
+    #folder_path = "C:\\Users\\kesh2\\ArticleScout\\Urls\\Guardian_urls.txt"
+    with open("C:\\Users\\kesh2\\ArticleScout\\Urls\\Guardian_urls.txt", "a", encoding="utf-8") as guardian:
         for value in culture_list:
             for link in value_soup.find_all("a", attrs={"href": re.compile(value + "/2024")}):
                 if filter_url(link.get("href")):

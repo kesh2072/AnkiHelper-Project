@@ -14,7 +14,7 @@ with open("common_words.txt", "r") as common:
 # with open("names.txt", "r") as names:
 #     name = names.read()
 
-with open("bbc_text.txt", "r") as raw_text:
+with open("C:\\Users\\kesh2\\ArticleScout\\Articles\\BBC_articles\\bbc_test.txt", "r") as raw_text:
     text = raw_text.read()
 
 text_two = text.replace("'", "")

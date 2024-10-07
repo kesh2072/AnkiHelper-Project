@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 import csv
 import re
 
-with open("guardian_links.txt", "r") as guardian:
+with open("C:\\Users\\kesh2\\ArticleScout\\Urls\\Guardian_urls.txt", "r") as guardian:
     raw_urls = (guardian.read())
 
 def convert_list(string):
@@ -23,7 +23,7 @@ def open_and_write_article(url):
         feed = soup.find_all("p")
         feed2 = str(feed)
         clean_feed = re.sub("<[^>]+>", "", feed2)
-        with open("bbc_text.txt", "a") as bbc:
+        with open("C:\\Users\\kesh2\\ArticleScout\\Articles\\BBC_articles\\bbc_test.txt", "a") as bbc:
             bbc.write(clean_feed)
             bbc.write("\n")
     else:
