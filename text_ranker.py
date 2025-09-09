@@ -1,4 +1,5 @@
-from readability import Readability
+#from readability import Readability
+import readability
 from dotenv import load_dotenv
 import os
 
@@ -12,7 +13,7 @@ def convert_list(string):
     return ly
 
 def rank_article_complexity():
-    with open(base_path + "Articles\\Guardian_articles\\Guardian.txt", "r", encoding="utf-8") as article_content:
+    with open(base_path + "articles\\Guardian_articles\\Guardian.txt", "r", encoding="utf-8") as article_content:
         list_of_articles = convert_list(article_content.read())
 
         for article in list_of_articles:
@@ -21,7 +22,7 @@ def rank_article_complexity():
                 print("too short")
                 continue
             else:
-                r = Readability(article)
+                r = readability.Readability(article)
                 fk = r.flesch()
                 print(fk.score, fk.grade_levels)
                 print(article, "\n")
