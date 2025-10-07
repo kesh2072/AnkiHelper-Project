@@ -50,4 +50,4 @@ def get_random_excerpt(text, length=500):
 
     start = random.randint(0, len(words) - length)
     excerpt = " ".join(words[start:start+length])
-    return excerpt
+    return
