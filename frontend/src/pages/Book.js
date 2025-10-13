@@ -1,13 +1,33 @@
-// pages/Book.js
 import { useState } from "react";
 
 function Book() {
   const [book, setBook] = useState(null);
+  const [message, setMessage] = useState("");
 
   const fetchBook = async () => {
-    const res = await fetch("http://127.0.0.1:8000/api/book/");
+    const res = await fetch("http://127.0.0.1:8000/books/api/book/");
     const data = await res.json();
     setBook(data);
+    setMessage("", data);
+  };
+
+  const saveBook = async () => {
+    if (!book) return;
+    const res = await fetch("http://127.0.0.1:8000/books/save/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title: book.title,
+        author: book.authors?.[0]?.name || "Unknown",
+        subject: book.subjects?.join(", ") || "",
+        bookshelves: book.bookshelves?.join(", ") || "",
+        language: book.languages?.join(", ") || "",
+        text_url: book.formats?.["text/plain; charset=us-ascii"]
+      }),
+    });
+
+    const data = await res.json();
+    setMessage(data.message || "Book saved!"); 
   };
 
   return (
@@ -28,6 +48,7 @@ function Book() {
               {book.authors?.name}
             </h6>
             <p className="card-text">{book.summary}</p>
+
             <ul className="list-group list-group-flush">
               <li className="list-group-item">
                 <strong>Subject:</strong> {book.subject}
@@ -39,9 +60,20 @@ function Book() {
                 <strong>Language:</strong> {book.language}
               </li>
             </ul>
-            <a href={book.text_url} className="btn btn-outline-secondary mt-3">
+
+            <a href={book.text_url} className="btn btn-outline-secondary mt-3 me-2">
               Read Online
             </a>
+
+            <button className="btn btn-success mt-3" onClick={saveBook}>
+              Save Book
+            </button>
+
+            {message && (
+              <p className="mt-3 text-success">
+                {message}
+              </p>
+            )}
           </div>
         </div>
       )}
