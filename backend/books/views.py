@@ -27,7 +27,7 @@ def save_article(request):
             subject=data.get("subject"),
             bookshelves=data.get("bookshelves"),
             language=data.get("language"),
-            text_url=data.get("text_url")
+            text_url = data.get("text_url", "")
         )
         return JsonResponse({"message": "Book saved!"})
     return JsonResponse({"message": "Invalid request"}, status=400)

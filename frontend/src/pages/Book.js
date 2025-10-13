@@ -8,7 +8,7 @@ function Book() {
     const res = await fetch("http://127.0.0.1:8000/books/api/book/");
     const data = await res.json();
     setBook(data);
-    setMessage("");
+    setMessage("", data);
   };
 
   const saveBook = async () => {
@@ -22,12 +22,12 @@ function Book() {
         subject: book.subjects?.join(", ") || "",
         bookshelves: book.bookshelves?.join(", ") || "",
         language: book.languages?.join(", ") || "",
-        text_url: book.formats?.["text/plain; charset=utf-8"] || book.formats?.["text/plain"] || "",
+        text_url: book.formats?.["text/plain; charset=us-ascii"]
       }),
     });
 
     const data = await res.json();
-    setMessage(data.message || "Book saved!");
+    setMessage(data.message || "Book saved!"); 
   };
 
   return (
