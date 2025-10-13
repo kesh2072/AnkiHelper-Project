@@ -4,7 +4,7 @@ Starting the project:
 
 - "pip install -r requirements.txt"
 
-- cd backend -> "python manage.py runserver"
+- cd backend -> "python manage.py migrate", "python manage.py runserver"
 
 - cd frontend -> "npm start"
 
