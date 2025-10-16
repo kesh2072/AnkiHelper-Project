@@ -1,18 +1,24 @@
-// pages/ProfilePage.js
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
-function Profile() {
+function ProfilePage() {
+  const { logout } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
+
   return (
     <div className="container py-5">
       <h1>Profile Page</h1>
-      <ul>
-        <li>
-          <Link className="nav-link" to="/register/">Create an account</Link>
-        </li>
-      </ul>
+      <button onClick={handleLogout} className="btn btn-danger">
+        Logout
+      </button>
     </div>
   );
 }
 
-export default Profile;
+export default ProfilePage;

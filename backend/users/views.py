@@ -3,14 +3,19 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from .models import SavedArticle
+from rest_framework import generics
+from .serializers import UserSerializer
 import json
+
+class RegisterUserView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
 @csrf_exempt
 def save_article(request):
     if request.method == 'POST':
         data = json.loads(request.body)
-        # Temporary: get a dummy user (until login is set up)
-        user = User.objects.first()
+        user = User.objects.first() # rework later to find current user
 
         article = SavedArticle.objects.create(
             user=user,
