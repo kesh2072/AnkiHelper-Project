@@ -2,11 +2,16 @@ import { useState, useEffect } from "react";
 
 function SavedBooks() {
   const [savedBooks, setSavedBooks] = useState([]);
+  const token = localStorage.getItem("access");
 
-  // Fetch saved books from the backend when component mounts
   useEffect(() => {
     const fetchSavedBooks = async () => {
-      const res = await fetch("http://127.0.0.1:8000/books/saved/");
+      const res = await fetch("http://127.0.0.1:8000/books/saved/", {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+      });
       const data = await res.json();
       setSavedBooks(data);
 

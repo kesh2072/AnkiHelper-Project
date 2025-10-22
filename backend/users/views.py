@@ -6,32 +6,39 @@ from .models import SavedArticle
 from rest_framework import generics
 from .serializers import UserSerializer
 import json
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework import status
 
 class RegisterUserView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
-@csrf_exempt
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def save_article(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        user = User.objects.first() # rework later to find current user
+    data = request.data
+    user = request.user
 
-        article = SavedArticle.objects.create(
-            user=user,
-            title=data.get('title', 'Untitled'),
-            author=data.get('author', ''),
-            text_url=data.get('text_url', ''),
-            excerpt=data.get('excerpt', '')
-        )
-        return JsonResponse({'message': 'Article saved!', 'id': article.id})
-
-    return JsonResponse({'error': 'POST request required'}, status=400)
+    article = SavedArticle.objects.create(
+        user=user,
+        title=data.get('title', 'Untitled'),
+        author=data.get('author', ''),
+        text_url=data.get('text_url', ''),
+        excerpt=data.get('excerpt', '')
+    )
+    return Response({'message': 'Article saved!', 'id': article.id}, status=status.HTTP_201_CREATED)
 
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def list_saved_articles(request):
-    user = User.objects.first()  # same placeholder user
+    print("User:", request.user)
+    print("Auth:", request.auth)
+    user = request.user
     articles = SavedArticle.objects.filter(user=user).values(
         'title', 'author', 'text_url', 'excerpt', 'date_saved'
     )
-    return JsonResponse(list(articles), safe=False)
+    return Response(list(articles))
+

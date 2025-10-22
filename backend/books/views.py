@@ -5,48 +5,43 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 from users.models import SavedArticle
 from django.contrib.auth.models import User
+from rest_framework import generics
+from users.serializers import UserSerializer
+import json
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework import status
 
 def home(request):
     return HttpResponse("Hello, world! This is my first Django app.")
 
 def view_book_api(request):
     book = get_random_book()
-    #book = clean_gutenberg_text(book)
-    #excerpt = get_random_excerpt(book, length=80)
     return JsonResponse(book)
 
-@csrf_exempt
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def save_article(request):
-    if request.method == "POST":
-        data = json.loads(request.body)
-        user = User.objects.first()  # placeholder user for now
-        SavedArticle.objects.create(
-            user=user,
-            title=data.get("title"),
-            author=data.get("author"),
-            subject=data.get("subject"),
-            bookshelves=data.get("bookshelves"),
-            language=data.get("language"),
-            text_url = data.get("text_url", "")
-        )
-        return JsonResponse({"message": "Book saved!"})
-    return JsonResponse({"message": "Invalid request"}, status=400)
+    data = request.data
+    user = request.user
 
-@csrf_exempt
+    article = SavedArticle.objects.create(
+        user=user,
+        title=data.get('title', 'Untitled'),
+        author=data.get('author', ''),
+        text_url=data.get('text_url', ''),
+    )
+    return Response({'message': 'Article saved!', 'id': article.id}, status=status.HTTP_201_CREATED)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def list_saved_articles(request):
-    # For now, get the first user as a placeholder
-    user = User.objects.first()
-    saved_articles = SavedArticle.objects.filter(user=user)
-
-    data = []
-    for article in saved_articles:
-        data.append({
-            "title": article.title,
-            "author": article.author,
-            "subject": article.subject,
-            "bookshelves": article.bookshelves,
-            "language": article.language,
-            "text_url": article.text_url,
-        })
-
-    return JsonResponse(data, safe=False)
+    print("User:", request.user)
+    print("Auth:", request.auth)
+    user = request.user
+    articles = SavedArticle.objects.filter(user=user).values(
+        'title', 'author', 'text_url'
+    )
+    return Response(list(articles))

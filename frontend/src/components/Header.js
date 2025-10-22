@@ -16,7 +16,7 @@ function Header() {
               <Link className="nav-link" to="/profile">Profile</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/saved">Saved Books</Link>
+              <Link className="nav-link" to="/books/saved">Saved Books</Link>
             </li>
             {/* Add more pages here */}
           </ul>
