@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'books',
     'users',
+    'ankiConnect',
     'corsheaders',
     'rest_framework',
     'rest_framework_simplejwt',
