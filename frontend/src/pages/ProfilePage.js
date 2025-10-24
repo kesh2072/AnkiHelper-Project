@@ -16,9 +16,16 @@ function ProfilePage() {
     <div className="container py-5">
       <h1>Profile Page</h1>
       {isLoggedIn ? (
+      <div>
       <button onClick={handleLogout} className="btn btn-danger">
         Logout
       </button>
+      <ul>
+      <li className="nav-item">
+        <Link className="nav-link" to="/books/saved">Saved Books</Link>
+      </li>
+      </ul>
+      </div>
       ) : (
         <div>
         <Link to="/login">Login</Link>

@@ -6,6 +6,7 @@ import Header from "./components/Header";
 import SavedBooks from "./pages/SavedBooks";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
+import Anki from "./pages/AnkiDeck";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/books/saved" element={<SavedBooks />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/anki" element={<Anki />} />
       </Routes>
     </Router>
   );
