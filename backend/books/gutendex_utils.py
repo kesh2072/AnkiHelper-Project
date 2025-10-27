@@ -3,7 +3,6 @@ import requests, random
 BASE_URL = "https://gutendex.com/books/"
 
 def get_random_book():
-    # Get a random page of English books that have plain text
     num = random.randint(1, 1000)  
     url = f"{BASE_URL}{num}"
     response = requests.get(url).json()

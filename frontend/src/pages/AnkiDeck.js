@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 function Anki() {
   const [message, setMessage] = useState("");
-  const [decks, setDecks] = useState(null);
+  const [decks, setDecks] = useState([]);
 
   const viewDeck = async () => {
     try {
@@ -27,9 +27,19 @@ function Anki() {
       >
         View your Anki decks
       </button>
-      {message && (
-        <pre className="bg-gray-100 p-4 rounded">{message}</pre>
-      )}
+      <div className="row">
+      {decks.map((deck, index) => (
+        <div className="col-md-4 mb-3" key={index}>
+          <div className="card h-100">
+            <div className="card-body">
+              <h5 className="card-title">{deck}</h5>
+              <p className="card-text">Put some deck information here</p>
+              <button className="btn btn-primary">Open Deck</button>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
     </div>
   );
 }
