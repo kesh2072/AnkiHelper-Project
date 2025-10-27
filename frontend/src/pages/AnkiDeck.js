@@ -2,14 +2,16 @@ import React, { useState } from "react";
 
 function Anki() {
   const [message, setMessage] = useState("");
+  const [decks, setDecks] = useState(null);
 
   const viewDeck = async () => {
     try {
-      const res = await fetch("http://127.0.0.1:8000/api/anki/");
+      const res = await fetch("http://127.0.0.1:8000/anki/api/anki/");
       if (!res.ok) {
         throw new Error("Network response was not ok");
       }
       const data = await res.json();
+      setDecks(data);
       setMessage(JSON.stringify(data, null, 2));
     } catch (error) {
       console.error("Error fetching decks:", error);
