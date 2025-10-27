@@ -28,8 +28,8 @@ function ProfilePage() {
       </div>
       ) : (
         <div>
-        <Link to="/login">Login</Link>
-        <Link to="/register">Create an account</Link>
+          <Link to="/login" className="btn btn-primary rounded-pill px-3" type="button">Login</Link>
+          <Link to="/register" className="btn btn-primary rounded-pill px-3" type="button">Create an account</Link>
       </div>
       )}
     </div>
