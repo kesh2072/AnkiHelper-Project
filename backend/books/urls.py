@@ -7,4 +7,5 @@ urlpatterns = [
     path('save/', views.save_article, name='save_article'),
     path('saved/', views.list_saved_articles, name='list_saved_articles'),
     path('delete/<int:article_id>/', views.delete_article, name='delete_article'),
+    path("translate/", views.deepl_translate, name="translate")
 ]

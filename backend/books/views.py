@@ -13,6 +13,9 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 from users.serializers import SavedArticleSerializer
+import deepl
+import os
+from dotenv import load_dotenv
 
 def home(request):
     return HttpResponse("Hello, world! This is my first Django app.")
@@ -55,3 +58,16 @@ def list_saved_articles(request):
     books = SavedArticle.objects.filter(user=user)
     serializer = SavedArticleSerializer(books, many=True)
     return Response(serializer.data)
+
+load_dotenv()
+auth_key = os.getenv("DEEPL_API_KEY")
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def deepl_translate(request):
+    text = request.data.get("text", "")
+    if not text:
+        return Response({"error": "no text provided"}, status=400)
+    deepl_client = deepl.DeepLClient(auth_key)
+    translation = deepl_client.translate_text(text, target_lang="DE")
+    return Response({"translation": translation.text})
