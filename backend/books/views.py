@@ -25,6 +25,8 @@ def view_book_api(request):
 def save_article(request):
     data = request.data
     user = request.user
+    print(data)
+    print(data.get('text_url', 'could not retrieve text url'))
 
     article = SavedArticle.objects.create(
         user=user,

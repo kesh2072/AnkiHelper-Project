@@ -22,11 +22,11 @@ function Book() {
        },
       body: JSON.stringify({
         title: book.title,
-        author: book.authors?.[0]?.name || "Unknown",
-        subject: book.subjects?.join(", ") || "",
-        bookshelves: book.bookshelves?.join(", ") || "",
-        language: book.languages?.join(", ") || "",
-        text_url: book.formats?.["text/plain; charset=us-ascii"]
+        author: book.authors,
+        subject: book.subjects,
+        bookshelves: book.bookshelves,
+        language: book.language,
+        text_url: book.text_url
       }),
     });
 

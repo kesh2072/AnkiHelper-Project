@@ -28,19 +28,16 @@ def clean_gutenberg_text(text):
     start_marker = "*** START OF THE PROJECT GUTENBERG EBOOK"
     end_marker = "*** END OF THE PROJECT GUTENBERG EBOOK"
 
-    # Find the start
     start_idx = text.find(start_marker)
     if start_idx != -1:
-        # Move to the end of the line
         start_idx = text.find("\n", start_idx) + 1
         text = text[start_idx:]
 
-    # Find the end
     end_idx = text.find(end_marker)
     if end_idx != -1:
         text = text[:end_idx]
 
-    return text.strip()  # remove leading/trailing whitespace
+    return text.strip()
 
 def get_random_excerpt(text, length=500):
     words = text.split()
