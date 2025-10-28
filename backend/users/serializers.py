@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
+from .models import SavedArticle
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
@@ -15,3 +16,8 @@ class UserSerializer(serializers.ModelSerializer):
             password=validated_data['password']
         )
         return user
+
+class SavedArticleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SavedArticle
+        fields = ['id', 'user', 'title', 'author', 'subject', 'bookshelves', 'language', 'text_url']

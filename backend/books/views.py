@@ -12,6 +12,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
+from users.serializers import SavedArticleSerializer
 
 def home(request):
     return HttpResponse("Hello, world! This is my first Django app.")
@@ -36,14 +37,21 @@ def save_article(request):
     )
     return Response({'message': 'Article saved!', 'id': article.id}, status=status.HTTP_201_CREATED)
 
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_article(request, article_id):
+    user = request.user
+    try:
+        article = SavedArticle.objects.get(id=article_id, user=user)
+        article.delete()
+        return Response({'message': 'Article deleted'}, status=status.HTTP_200_OK)
+    except SavedArticle.DoesNotExist:
+        return Response({'message': 'Issue deleting article'}, status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def list_saved_articles(request):
-    print("User:", request.user)
-    print("Auth:", request.auth)
     user = request.user
-    articles = SavedArticle.objects.filter(user=user).values(
-        'title', 'author', 'text_url'
-    )
-    return Response(list(articles))
+    books = SavedArticle.objects.filter(user=user)
+    serializer = SavedArticleSerializer(books, many=True)
+    return Response(serializer.data)
