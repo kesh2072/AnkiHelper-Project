@@ -20,11 +20,8 @@ function ProfilePage() {
       <button onClick={handleLogout} className="btn btn-danger">
         Logout
       </button>
-      <ul>
-      <li className="nav-item">
-        <Link className="nav-link" to="/books/saved">Saved Books</Link>
-      </li>
-      </ul>
+        <Link to="/books/saved" className="btn btn-primary rounded-pill px-3" type="button">Saved Books</Link>
+        <Link to="/anki" className="btn btn-primary rounded-pill px-3" type="button">Your Anki decks</Link>
       </div>
       ) : (
         <div>
