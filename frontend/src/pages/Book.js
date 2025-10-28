@@ -3,6 +3,7 @@ import { useState } from "react";
 function Book() {
   const [book, setBook] = useState(null);
   const [message, setMessage] = useState("");
+  const token = localStorage.getItem("access");
 
   const fetchBook = async () => {
     const res = await fetch("http://127.0.0.1:8000/books/api/book/");
@@ -15,7 +16,10 @@ function Book() {
     if (!book) return;
     const res = await fetch("http://127.0.0.1:8000/books/save/", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { 
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
+       },
       body: JSON.stringify({
         title: book.title,
         author: book.authors?.[0]?.name || "Unknown",

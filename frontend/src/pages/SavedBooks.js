@@ -1,12 +1,19 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
 
 function SavedBooks() {
   const [savedBooks, setSavedBooks] = useState([]);
+  const token = localStorage.getItem("access");
+  const {isLoggedIn} = useContext(AuthContext);
 
-  // Fetch saved books from the backend when component mounts
   useEffect(() => {
     const fetchSavedBooks = async () => {
-      const res = await fetch("http://127.0.0.1:8000/books/saved/");
+      const res = await fetch("http://127.0.0.1:8000/books/saved/", {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+      });
       const data = await res.json();
       setSavedBooks(data);
 
@@ -16,7 +23,9 @@ function SavedBooks() {
   }, []);
 
   return (
-    <div className="container py-5">
+    <div>
+    {isLoggedIn ? (
+      <div className="container py-5">
       <h1 className="text-center mb-4">My Saved Books</h1>
 
       {savedBooks.length === 0 ? (
@@ -43,6 +52,16 @@ function SavedBooks() {
         ))
       )}
     </div>
+    ) : (
+      <div>
+      <p>
+        please log in to view this page
+      </p>
+      </div>
+    )
+}
+</div>
+    
   );
 }
 
