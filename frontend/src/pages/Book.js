@@ -4,6 +4,8 @@ function Book() {
   const [book, setBook] = useState(null);
   const [message, setMessage] = useState("");
   const token = localStorage.getItem("access");
+  const [backText, setBackText] = useState("");
+  const [tags, setTags] = useState("");
   const getSelectedText = () => {
     const selection = window.getSelection();
     return selection.toString().trim();
@@ -13,6 +15,7 @@ function Book() {
     const text = window.getSelection().toString().trim();
     setSelectedText(text);
   };
+  const [deckName, setDeckName] = useState("Default");
 
   const fetchBook = async () => {
     const res = await fetch("http://127.0.0.1:8000/books/api/book/");
@@ -60,6 +63,32 @@ function Book() {
     } catch (err) {
       console.error(err);
       alert("Translation failed");
+    }
+  };
+
+  const addToAnki = async (front_text, back_text, tags="") => {
+    if (!selectedText) return;
+
+    try {
+      const res = await fetch("http://127.0.0.1:8000/anki/api/addCard/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${localStorage.getItem("access")}`,
+        },
+        body: JSON.stringify({
+          text: selectedText,
+          deck: deckName,
+          front_text: selectedText,
+          back_text: backText,
+        }),
+      });
+
+      const data = await res.json();
+      setMessage(data.status || "Card added!");
+    } catch (err) {
+      console.error(err);
+      setMessage("Failed to add card");
     }
   };
 
@@ -118,6 +147,7 @@ function Book() {
                 </button>
                 <button
                   className="btn btn-success"
+                  onClick={() => addToAnki(selectedText, backText, [""])}
                 >
                   Add to Anki
                 </button>

@@ -5,6 +5,7 @@ import os
 import requests
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 
 def view_decks(request):
     open_anki()
@@ -42,3 +43,38 @@ def get_deck_cards(request, deck_name):
     print(info_res.get("result", []))
 
     return Response(info_res.get("result", []))
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def add_note_to_deck(request):
+    front = request.data.get("front_text")
+    back = request.data.get("back_text")
+    tags = request.data.get("tags", [""])
+
+    if not front:
+        return Response({"error": "front text is required"}, status=400)
+    
+    response = requests.post(
+        "http://localhost:8765", json={
+            "action": "addNote",
+            "version": 5,
+            "params": {
+                "note": {
+                    "deckName": "TestDeck",
+                    "modelName": "Basic",
+                    "fields": {
+                        "Front": front,
+                        "Back": back,
+                    },
+                    "tags": tags or [""]
+                }
+            }
+        }
+    )
+    
+    try:
+        data = response.json()
+    except Exception:
+        data = {"error": "Trouble connecting to AnkiConnect", "raw": response.text}
+
+    return Response(data)
