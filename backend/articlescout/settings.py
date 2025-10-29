@@ -99,7 +99,7 @@ CORS_ALLOW_HEADERS = list(default_headers) + [
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'AnkiHelp_db',
+        'NAME': 'ankihelp_db',
         'USER': 'postgres',
         'PASSWORD': 'password',
         'HOST': 'localhost',
