@@ -27,4 +27,3 @@ class UserWord(models.Model):
     word = models.ForeignKey(Word, on_delete=models.CASCADE)
     due_date = models.DateField()
     known = models.BooleanField(default=False)
-
