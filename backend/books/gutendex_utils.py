@@ -1,4 +1,6 @@
 import requests, random
+from users.models import Article
+from articlescout.tokeniser import tokenise_words
 
 BASE_URL = "https://gutendex.com/books/"
 
@@ -15,6 +17,15 @@ def get_random_book():
     bookshelves = response['bookshelves']
     language = response['languages']
     text_url = response['formats']['text/plain; charset=us-ascii']
+
+    x = Article.objects.create(
+        title = response['title'],
+        text = response['summaries'],
+    )
+
+    for item in summary:
+        x = tokenise_words(item)
+        print(x)
 
     return {"title": title, "authors": authors, "summary": summary, "subjects": subjects, "bookshelves": bookshelves, "language": language, "text_url": text_url}
 

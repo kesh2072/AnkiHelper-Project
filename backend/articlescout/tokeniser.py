@@ -1,8 +1,6 @@
 import nltk
 sent = "GeeksforGeeks is a great learning platform. \
 It is one of the best for Computer Science students."
-print(nltk.word_tokenize(sent))
-print(nltk.sent_tokenize(sent))
 
 def tokenise_words(text):
     """

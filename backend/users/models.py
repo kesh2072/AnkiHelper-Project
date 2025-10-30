@@ -25,7 +25,7 @@ class Article(models.Model):
     text = models.TextField()
 
     def __str__(self):
-        return self.title
+        return f"{self.title}: {self.text}"
 
 class ArticleWord(models.Model):
     article = models.ForeignKey(Article, on_delete=models.CASCADE)
