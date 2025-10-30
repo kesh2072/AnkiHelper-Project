@@ -1,5 +1,5 @@
 import tokeniser
-from .models import UserWord, ArticleWord, Article
+from users.models import UserWord, ArticleWord, Article
 from ankiConnect.anki_utils import get_due_cards
 
 def tokenise_article():
