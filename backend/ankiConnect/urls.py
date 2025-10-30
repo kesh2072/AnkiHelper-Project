@@ -4,6 +4,5 @@ from . import views
 urlpatterns = [
     path("api/anki/", views.view_decks, name="get_anki_decks"),
     path("api/ankicard", views.view_cards, name="view cards"),
-    path("api/deck/<str:deck_name>/", views.get_deck_cards),
-    path("api/addCard/", views.add_note_to_deck), # later come back and add in dynamic routing to add to any deck of choice
+    path("api/test/", views.store_words, name="test db"), # change url path once it's not hardcoded anymore
 ]

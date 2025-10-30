@@ -3,9 +3,9 @@ from django.http import JsonResponse
 from .anki_utils import get_decks, get_card_info, open_anki, is_anki_open
 import os
 import requests
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from users.models import Word, UserWord
+from django.contrib.auth.models import User
+from datetime import date
 
 def view_decks(request):
     open_anki()
@@ -25,56 +25,47 @@ def view_cards(request):
     print(data)
     return JsonResponse(data, safe=False)
 
-@api_view(['GET'])
-def get_deck_cards(request, deck_name):
-    find_res = requests.post("http://127.0.0.1:8765", json={
-        "action": "findCards",
-        "version": 6,
-        "params": {"query": f'deck:"{deck_name}"'}
-    }).json()
+def store_words(request):
+    """
+    This is hardcoded in, but most of this will be re-useable later
+    What this function does is:
+    - Finds all of the card ids in a given Anki deck
+    - Searches through all these ids to get the card info (and strips it down to get the actual word)
+    - Uploads these words to the user's UserWord database, so we can search these words against the stored articles
 
-    card_ids = find_res.get("result", [])
-
-    info_res = requests.post("http://127.0.0.1:8765", json={
-        "action": "cardsInfo",
-        "version": 6,
-        "params": {"cards": card_ids}
-    }).json()
-    print(info_res.get("result", []))
-
-    return Response(info_res.get("result", []))
-
-@api_view(["POST"])
-@permission_classes([IsAuthenticated])
-def add_note_to_deck(request):
-    front = request.data.get("front_text")
-    back = request.data.get("back_text")
-    tags = request.data.get("tags", [""])
-
-    if not front:
-        return Response({"error": "front text is required"}, status=400)
-    
+    To change this later, I just need to:
+    - change deck name to not be hardcoded
+    - just use request.user instead of default user
+    - find a more flexible way to extract the word from Anki deck (all of the templates seem to change slightly)
+    """
+    deck_name = "test"
     response = requests.post(
-        "http://localhost:8765", json={
-            "action": "addNote",
-            "version": 5,
-            "params": {
-                "note": {
-                    "deckName": "TestDeck",
-                    "modelName": "Basic",
-                    "fields": {
-                        "Front": front,
-                        "Back": back,
-                    },
-                    "tags": tags or [""]
-                }
-            }
-        }
+        "http://127.0.0.1:8765",
+        json={"action": "findCards", "params": {"query": f"deck:{deck_name}"}, "version": 6}
     )
-    
-    try:
-        data = response.json()
-    except Exception:
-        data = {"error": "Trouble connecting to AnkiConnect", "raw": response.text}
 
-    return Response(data)
+    card_ids = response.json()["result"]
+
+    response = requests.post(
+        "http://127.0.0.1:8765",
+        json={"action": "cardsInfo", "params": {"cards": card_ids}, "version": 6}
+    )
+
+    cards = response.json()["result"]
+
+    word = cards[0]['fields'].get("Word").get('value')
+
+    words = []
+
+    for item in cards:
+        words.append(item['fields'].get('Word').get('value'))
+
+    user = User.objects.first()
+    for word in words:
+        word_obj, created = Word.objects.get_or_create(word=word)
+
+        UserWord.objects.get_or_create(user=user, word=word_obj, due_date=date.today(), known=False)
+    
+    print("Finished uploading words to database")
+
+    print(UserWord.objects.all())
