@@ -35,6 +35,9 @@ class ArticleWord(models.Model):
     class Meta:
         unique_together = ("article", "word")
 
+    def __str__(self):
+        return f"{self.article.title} -> {self.word}: {self.frequency}"
+
 class UserWord(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     word = models.ForeignKey(Word, on_delete=models.CASCADE)
