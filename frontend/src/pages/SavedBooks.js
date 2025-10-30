@@ -2,9 +2,29 @@ import { useState, useEffect, useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 
 function SavedBooks() {
+  const [message, setMessage] = useState("");
   const [savedBooks, setSavedBooks] = useState([]);
   const token = localStorage.getItem("access");
   const {isLoggedIn} = useContext(AuthContext);
+
+  const deleteArticle = async (id) => {
+  const token = localStorage.getItem("access");
+
+  const res = await fetch(`http://127.0.0.1:8000/books/delete/${id}/`, {
+    method: "DELETE",
+    headers: {
+      "Authorization": `Bearer ${token}`,
+    },
+  });
+
+  const data = await res.json();
+  if (res.ok) {
+    setMessage(data.message);
+    setSavedBooks(prev => prev.filter(article => article.id !== id));
+  } else {
+    setMessage(data.error || "Could not delete article");
+  }
+  };
 
   useEffect(() => {
     const fetchSavedBooks = async () => {
@@ -37,6 +57,12 @@ function SavedBooks() {
               <h5 className="card-title">{book.title}</h5>
               <h6 className="card-subtitle mb-2 text-muted">{book.author}</h6>
               <p className="card-text">{book.excerpt}</p>
+              <button
+                className="btn btn-danger btn-sm"
+                onClick={() => deleteArticle(book.id)}
+              >
+                Delete
+              </button>
               {book.text_url && (
                 <a
                   href={book.text_url}

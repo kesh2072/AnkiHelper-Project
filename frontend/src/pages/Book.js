@@ -4,6 +4,18 @@ function Book() {
   const [book, setBook] = useState(null);
   const [message, setMessage] = useState("");
   const token = localStorage.getItem("access");
+  const [backText, setBackText] = useState("");
+  const [tags, setTags] = useState("");
+  const getSelectedText = () => {
+    const selection = window.getSelection();
+    return selection.toString().trim();
+  };
+  const [selectedText, setSelectedText] = useState("");
+  const handleTextSelection = () => {
+    const text = window.getSelection().toString().trim();
+    setSelectedText(text);
+  };
+  const [deckName, setDeckName] = useState("Default");
 
   const fetchBook = async () => {
     const res = await fetch("http://127.0.0.1:8000/books/api/book/");
@@ -22,16 +34,62 @@ function Book() {
        },
       body: JSON.stringify({
         title: book.title,
-        author: book.authors?.[0]?.name || "Unknown",
-        subject: book.subjects?.join(", ") || "",
-        bookshelves: book.bookshelves?.join(", ") || "",
-        language: book.languages?.join(", ") || "",
-        text_url: book.formats?.["text/plain; charset=us-ascii"]
+        author: book.authors,
+        subject: book.subjects,
+        bookshelves: book.bookshelves,
+        language: book.language,
+        text_url: book.text_url
       }),
     });
 
     const data = await res.json();
     setMessage(data.message || "Book saved!"); 
+  };
+
+  const translateText = async (text) => {
+    const token = localStorage.getItem("access");
+    try {
+      const res = await fetch("http://127.0.0.1:8000/books/translate/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify({ text }),
+      });
+
+      const data = await res.json();
+      alert("Translation: " + data.translation);
+    } catch (err) {
+      console.error(err);
+      alert("Translation failed");
+    }
+  };
+
+  const addToAnki = async (front_text, back_text, tags="") => {
+    if (!selectedText) return;
+
+    try {
+      const res = await fetch("http://127.0.0.1:8000/anki/api/addCard/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${localStorage.getItem("access")}`,
+        },
+        body: JSON.stringify({
+          text: selectedText,
+          deck: deckName,
+          front_text: selectedText,
+          back_text: backText,
+        }),
+      });
+
+      const data = await res.json();
+      setMessage(data.status || "Card added!");
+    } catch (err) {
+      console.error(err);
+      setMessage("Failed to add card");
+    }
   };
 
   return (
@@ -46,7 +104,7 @@ function Book() {
 
       {book && (
         <div className="card mt-4 shadow-sm">
-          <div className="card-body">
+          <div className="card-body" onMouseUp={handleTextSelection}>
             <h5 className="card-title">{book.title}</h5>
             <h6 className="card-subtitle mb-2 text-muted">
               {book.authors?.name}
@@ -77,6 +135,23 @@ function Book() {
               <p className="mt-3 text-success">
                 {message}
               </p>
+            )}
+            {selectedText && (
+              <div className="mt-3">
+                <p>Selected: "{selectedText}"</p>
+                <button
+                  className="btn btn-primary me-2"
+                  onClick={() => translateText(selectedText)}
+                >
+                  Translate with DeepL
+                </button>
+                <button
+                  className="btn btn-success"
+                  onClick={() => addToAnki(selectedText, backText, [""])}
+                >
+                  Add to Anki
+                </button>
+              </div>
             )}
           </div>
         </div>
