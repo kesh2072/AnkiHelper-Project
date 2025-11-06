@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
-from .gutendex_utils import get_book, clean_gutenberg_text, get_random_excerpt, get_random_book, get_article
+from .gutendex_utils import get_book, clean_gutenberg_text, get_random_excerpt, get_random_book, get_article, get_rss_feeds
 from django.views.decorators.csrf import csrf_exempt
 import json
 from users.models import SavedArticle
@@ -73,6 +73,7 @@ def deepl_translate(request):
     return Response({"translation": translation.text})
 
 def view_article(request):
-    article = get_article()
+    links = get_rss_feeds()
+    article = get_article(links)
     print(article)
     return JsonResponse(article)

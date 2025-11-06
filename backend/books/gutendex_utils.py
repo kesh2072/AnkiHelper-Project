@@ -2,6 +2,8 @@ import requests, random
 from users.models import Article, ArticleWord, Word
 from articlescout.tokeniser import tokenise_words
 from newspaper import Article
+import feedparser
+import random
 
 BASE_URL = "https://gutendex.com/books/"
 
@@ -73,9 +75,24 @@ def get_random_excerpt(text, length=500):
     excerpt = " ".join(words[start:start+length])
     return
 
-def get_article():
-    url = 'https://www.theguardian.com/society/2025/nov/06/mistakenly-released-prisoner-billy-smith-turns-himself-in-wandsworth'
-    a = Article(url, language="en")
+def get_rss_feeds():
+    links = []
+    feeds = [
+        "https://www.france24.com/fr/rss",
+        "https://rss.dw.com/xml/rss-de-all",
+    ]
+    for item in feeds:
+        feed = feedparser.parse(item)
+        if feed.status == 200:
+            for entry in feed.entries:
+                links.append(entry.link)
+        else:
+            print("Failed to get RSS feed. Status code:", feed.status)
+    return links
+
+def get_article(links):
+    url = random.choice(links)
+    a = Article(url)
     a.download()
     a.parse()
     print(a.text)
