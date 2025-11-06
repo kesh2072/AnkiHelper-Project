@@ -46,7 +46,7 @@ function Article() {
     <div className="max-w-7xl mx-auto">
       <div className="text-center mb-8">
         <h1 className="text-4xl font-bold text-gray-800 mb-4">
-          Gutendex Book Explorer
+          News Articles
         </h1>
         <button
           className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-8 rounded-lg shadow-md transition-colors duration-200"
