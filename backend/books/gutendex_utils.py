@@ -95,5 +95,4 @@ def get_article(links):
     a = Article(url)
     a.download()
     a.parse()
-    print(a.text)
-    return {'title': a.title, 'text': a.text}
+    return {'title': a.title, 'publish_date': a.publish_date, 'text': a.text}
