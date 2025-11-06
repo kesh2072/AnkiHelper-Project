@@ -17,11 +17,15 @@ function ProfilePage() {
       <h1>Profile Page</h1>
       {isLoggedIn ? (
       <div>
-      <button onClick={handleLogout} className="btn btn-danger">
-        Logout
-      </button>
-        <Link to="/books/saved" className="btn btn-primary rounded-pill px-3" type="button">Saved Books</Link>
-        <Link to="/anki" className="btn btn-primary rounded-pill px-3" type="button">Your Anki decks</Link>
+        <button onClick={handleLogout} type="button" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+          Logout
+        </button>
+        <a href="/books/saved" type="button" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+          Saved Books
+        </a>
+        <a href="/anki" type="button" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+          Your Anki decks
+        </a>
       </div>
       ) : (
         <div>
