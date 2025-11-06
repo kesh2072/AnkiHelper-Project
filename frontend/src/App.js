@@ -7,6 +7,7 @@ import SavedBooks from "./pages/SavedBooks";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Anki from "./pages/AnkiDeck";
+import Article from "./pages/Article";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/anki" element={<Anki />} />
+        <Route path="/article" element={<Article />} />
       </Routes>
     </Router>
   );

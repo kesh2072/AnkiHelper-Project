@@ -1,6 +1,7 @@
 import requests, random
 from users.models import Article, ArticleWord, Word
 from articlescout.tokeniser import tokenise_words
+from newspaper import Article
 
 BASE_URL = "https://gutendex.com/books/"
 
@@ -71,3 +72,11 @@ def get_random_excerpt(text, length=500):
     start = random.randint(0, len(words) - length)
     excerpt = " ".join(words[start:start+length])
     return
+
+def get_article():
+    url = 'https://www.theguardian.com/society/2025/nov/06/mistakenly-released-prisoner-billy-smith-turns-himself-in-wandsworth'
+    a = Article(url, language="en")
+    a.download()
+    a.parse()
+    print(a.text)
+    return {'title': a.title, 'text': a.text}

@@ -53,7 +53,7 @@ function Header() {
                     </svg>
                   </div>
                   <div class="flex-auto">
-                    <a href="/news" class="block font-semibold text-gray-900">
+                    <a href="/article" class="block font-semibold text-gray-900">
                       News
                       <span class="absolute inset-0"></span>
                     </a>
