@@ -182,9 +182,7 @@ function Book() {
             </div>
           </div>
 
-          {/* RIGHT SIDE - Tools (1/3 width) */}
           <div className="lg:col-span-1 space-y-6">
-            {/* Anki Card Section */}
             <div className="bg-white rounded-xl shadow-lg p-6">
               <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
                 Add to Anki
